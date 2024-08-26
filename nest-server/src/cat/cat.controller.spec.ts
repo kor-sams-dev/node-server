@@ -11,7 +11,9 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { CreateCat } from './create-cat.dto';
+import { CatsService } from './cat.service';
+import { Cat } from './interfaces/cat.interface';
+import { CreateCatDto } from './dto/create-cat.dto';
 
 @Controller('cat')
 export class CatController {
@@ -79,7 +81,22 @@ export class CatController {
   }
 
   @Post('create-cat')
-  async createCat(@Body() createCatDto: CreateCat) {
+  async createCat(@Body() createCatDto: CreateCatDto) {
     return `This action adds a new cat / ${createCatDto.name} / ${createCatDto.age} / ${createCatDto.breed}`;
+  }
+}
+
+@Controller('provider-cat')
+export class ProviderCatController {
+  constructor(private catService: CatsService) {}
+
+  @Post()
+  async create(@Body() createCatDto: CreateCatDto) {
+    this.catService.create(createCatDto);
+  }
+
+  @Get()
+  async findAll(): Promise<Cat[]> {
+    return this.catService.fintAll();
   }
 }
