@@ -87,7 +87,7 @@ export class CatController {
 }
 
 @Controller('provider-cat')
-export class ProviderCatController {
+export class ProviderCatsController {
   constructor(private catService: CatsService) {}
 
   @Post()
