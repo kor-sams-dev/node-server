@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ForbiddenException } from './exception/forbidden';
 
 @Controller()
 export class AppController {
@@ -7,6 +8,24 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    try {
+      return this.appService.getHello();
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'This is a custom message',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @Get('exception')
+  getException(): string {
+    throw new ForbiddenException();
   }
 }

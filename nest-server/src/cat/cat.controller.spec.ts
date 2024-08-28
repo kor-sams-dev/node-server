@@ -9,11 +9,14 @@ import {
   Query,
   Redirect,
   Req,
+  UseFilters,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { ForbiddenException } from 'src/exception/forbidden';
+import { HttpExceptionFilter } from 'src/exception/http-exception.filter';
 import { CatsService } from './cat.service';
-import { Cat } from './interfaces/cat.interface';
 import { CreateCatDto } from './dto/create-cat.dto';
+import { Cat } from './interfaces/cat.interface';
 
 @Controller('cat')
 export class CatController {
@@ -87,16 +90,26 @@ export class CatController {
 }
 
 @Controller('provider-cat')
+@UseFilters(new HttpExceptionFilter())
 export class ProviderCatsController {
   constructor(private catService: CatsService) {}
 
   @Post()
+  // 단일 create 경로에만 예외 적용 시
+  // @UseFilters(new HttpExceptionFilter())
+  // @UseFilters(HttpExceptionFilter)
   async create(@Body() createCatDto: CreateCatDto) {
     this.catService.create(createCatDto);
+    throw new ForbiddenException();
   }
 
   @Get()
   async findAll(): Promise<Cat[]> {
     return this.catService.fintAll();
+  }
+
+  @Get('exception')
+  async findAllException(): Promise<Cat[]> {
+    throw new ForbiddenException();
   }
 }

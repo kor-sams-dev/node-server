@@ -11,6 +11,10 @@ async function bootstrap() {
    * forRoutes('*') within the AppModule (or any other module).
    */
   // app.use(logger); // Global Middleware
+
+  // global scoped filter
+  // app.useGlobalFilters(new HttpExceptionFilter());
+
   await app.listen(4000);
 }
 bootstrap();
