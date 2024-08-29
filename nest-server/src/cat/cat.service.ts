@@ -12,4 +12,12 @@ export class CatsService {
   fintAll(): Cat[] {
     return this.cats;
   }
+
+  findOne(id: number): Cat {
+    return this.cats[id];
+  }
+
+  findOneByUUID(uuid: string): Cat {
+    return this.cats.find((cat) => cat.uuid === uuid);
+  }
 }

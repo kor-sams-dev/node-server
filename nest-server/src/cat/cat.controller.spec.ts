@@ -4,7 +4,10 @@ import {
   Get,
   Header,
   HttpCode,
+  HttpStatus,
   Param,
+  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Query,
   Redirect,
@@ -111,5 +114,31 @@ export class ProviderCatsController {
   @Get('exception')
   async findAllException(): Promise<Cat[]> {
     throw new ForbiddenException();
+  }
+
+  // @Get(':id')
+  // async findOne(@Param('id', ParseIntPipe) id: number) {
+  //   return this.catService.findOne(id);
+  // }
+
+  @Get(':id')
+  async findOne(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.catService.findOne(id);
+  }
+
+  @Get()
+  async fineOneQuery(@Query('id', ParseIntPipe) id: number) {
+    return this.catService.findOne(id);
+  }
+
+  @Get(':uuid')
+  async findOneByUUID(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
+    return this.catService.findOneByUUID(uuid);
   }
 }
